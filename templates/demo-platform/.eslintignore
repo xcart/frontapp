@@ -1,0 +1,8 @@
+**/dist
+next*
+xcart.*
+*.config.js
+.eslintrc.*
+server.js
+**/sw.js
+**/workbox-*.js

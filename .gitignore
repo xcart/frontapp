@@ -1,0 +1,44 @@
+# dependencies
+node_modules
+
+# testing
+coverage
+
+# next.js
+.next/
+out/
+build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# turbo
+.turbo
+
+# build
+dist
+
+# vscode settings
+.vscode
+
+# Web/PhpStorm settings
+.idea
+
+# PWA
+**/public/workbox-*.js
+**/public/workbox-*.js.map
+**/public/sw.js
+**/public/sw.js.map
+**/public/fallback-*.js
+**/public/fallback-*.js.map

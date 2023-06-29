@@ -1,0 +1,11 @@
+.swiper-pagination {
+    @apply absolute bottom-unit-2 left-1/2 -translate-x-1/2 bg-contrast h-unit-2 rounded px-unit-2 flex items-center z-[1]
+}
+
+.swiper-pagination-bullet {
+    @apply rounded-full cursor-pointer bg-gray-500 w-unit h-unit ml-unit-2 first:ml-0
+}
+
+.swiper-pagination-bullet.swiper-pagination-bullet-active {
+    @apply bg-primary
+}
