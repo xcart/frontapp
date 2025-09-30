@@ -6,3 +6,4 @@ xcart.*
 server.js
 **/sw.js
 **/workbox-*.js
+**/widget.js

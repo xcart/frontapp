@@ -1,5 +1,4 @@
 import {addons} from '@storybook/addons'
-import {AppRouterContext} from 'next/dist/shared/lib/app-router-context'
 import {UPDATE_GLOBALS} from '@storybook/core-events'
 import {COLORS} from '../components/theme/colors'
 import './preview.css'
@@ -26,8 +25,14 @@ export const parameters = {
       },
     ],
   },
-  nextRouter: {
-    Provider: AppRouterContext.Provider,
+  nextjs: {
+    appDirectory: true,
+    navigation: {
+      path: '/',
+      asPath: '/',
+      query: {},
+      push() {},
+    },
   },
 }
 

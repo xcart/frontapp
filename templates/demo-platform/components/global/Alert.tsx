@@ -1,44 +1,76 @@
 'use client'
 
-import clsx from 'clsx'
+import React from 'react'
+import {ButtonIcon} from '~/components/elements/Button'
+import {
+  IconInfo,
+  IconClose,
+  IconWarning,
+  IconSuccess,
+} from '~/components/elements/Icons'
+import {tailwindMerge} from '~/helpers'
 
 export interface IAlert {
-  message: string
+  message?: string | null
   type?: 'error' | 'warning' | 'info' | 'success'
-  open: boolean
-  setOpen: () => void
+  onCloseHandler: () => void
   alertClasses?: string
   alertMessageClasses?: string
   closeClasses?: string
-  closeButton?: React.ReactNode
+  closeButton?: boolean
 }
 
 export function Alert({
   type = 'info',
   message,
-  open,
-  setOpen,
+  onCloseHandler,
   alertClasses,
   alertMessageClasses,
   closeClasses,
-  closeButton,
+  closeButton = true,
 }: IAlert) {
-  const alertStyles = clsx('flex justify-between', alertClasses)
+  let alertBgColor = 'bg-warning'
+  let alertIcon = <IconInfo />
+
+  if (type === 'error') {
+    alertBgColor = 'bg-error'
+    alertIcon = <IconWarning />
+  } else if (type === 'success') {
+    alertBgColor = 'bg-success'
+    alertIcon = <IconSuccess />
+  }
+
+  const alertStyles = tailwindMerge(
+    'fixed z-modal left-0 right-0 top-0 z-20 flex min-h-[60px] items-center justify-center px-unit-4',
+    alertBgColor,
+    alertClasses,
+  )
 
   return (
     <>
-      {open && (
-        <div className={alertStyles} data-type={type}>
-          <div className={alertMessageClasses}>{message}</div>
+      {message && (
+        <div className={alertStyles}>
+          <div className="flex w-full justify-center">
+            <div
+              className={tailwindMerge(
+                'flex items-center',
+                alertMessageClasses,
+              )}
+            >
+              <span className="mr-unit">{alertIcon}</span> {message}
+            </div>
+          </div>
           {closeButton && (
-            <button
-              className={closeClasses}
-              onClick={setOpen}
-              type="button"
+            <ButtonIcon
+              className={tailwindMerge(
+                'relative -right-[4px] h-unit-4 w-unit-4 hover:bg-transparent md:-right-[10px] md:h-unit-6 md:w-unit-6',
+                closeClasses,
+              )}
+              onClick={onCloseHandler}
               aria-label="Close"
             >
-              {closeButton}
-            </button>
+              <IconClose />
+            </ButtonIcon>
           )}
         </div>
       )}

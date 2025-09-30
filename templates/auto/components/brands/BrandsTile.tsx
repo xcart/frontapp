@@ -44,7 +44,12 @@ export function BrandsTile({
               className="mb-unit-4 flex w-[110px] flex-col items-center px-unit-2 lg:mb-unit-8 lg:w-[130px] lg:px-unit-4"
               key={item.id}
             >
-              <div className="relative overflow-hidden rounded bg-gray-300">
+              <div
+                className={tailwindMerge(
+                  'relative overflow-hidden rounded bg-gray-300',
+                  !item.logo?.url ? 'p-[50%]' : '',
+                )}
+              >
                 {item.logo?.url ? (
                   <Image
                     src={item.logo?.url}

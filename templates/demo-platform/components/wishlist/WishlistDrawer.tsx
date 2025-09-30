@@ -1,20 +1,22 @@
 'use client'
 
 import {useEffect, useState} from 'react'
-import {useAtom, useAtomValue} from 'jotai'
+import {CustomerWishlist} from '@xcart/storefront'
+import {useAtom, useAtomValue, useSetAtom} from 'jotai'
 import {Badge} from '~/components/elements/Badge'
 import {ButtonIcon} from '~/components/elements/Button'
 import {Drawer, ClearPaneAction} from '~/components/elements/Drawer'
 import {DrawerPane} from '~/components/elements/Drawer/DrawerPane'
 import {PaneTriggerButton} from '~/components/elements/Drawer/PaneTriggerButton'
 import {IconHeart} from '~/components/elements/Icons'
+import {clearCustomerWishlist} from '~/components/wishlist/functions/helpers'
 import {wishlistItems} from '~/components/wishlist/store'
 import {Wishlist} from '~/components/wishlist/Wishlist'
 
 function WishlistPane({children}: {children: React.ReactElement}) {
   const [wishlistIds, setWishlistIds] = useAtom(wishlistItems)
 
-  const clearWishlist = () => setWishlistIds([])
+  const clearWishlist = () => clearCustomerWishlist(() => setWishlistIds([]))
 
   return (
     <DrawerPane
@@ -53,12 +55,26 @@ function WishlistPaneTriggerButton(props: any) {
   )
 }
 
+function useInitWishlist(wishlistIds: number[]) {
+  const setWishlist = useSetAtom(wishlistItems)
+
+  useEffect(() => {
+    if (wishlistIds.length) {
+      setWishlist(wishlistIds)
+    }
+  }, [setWishlist, wishlistIds])
+}
+
 export function WishlistDrawer({
   initWishlistCount,
+  wishlist,
 }: {
   initWishlistCount: number
+  wishlist: CustomerWishlist | null
 }) {
   const [mounted, setMounted] = useState<boolean>(false)
+
+  useInitWishlist(wishlist?.productIds || [])
 
   useEffect(() => {
     setMounted(true)

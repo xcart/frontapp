@@ -19,22 +19,36 @@ export function ProductImagesMobile({
         buttonClasses="top-unit-2 right-unit-2"
         productId={productId}
       />
-      <Carousel>
-        {images.map((image, index) => {
-          const imageKey = `image-${index}`
-          return (
-            <Image
-              src={image.url as string}
-              alt={image.alt as string}
-              width={IMAGES.productList.width}
-              height={IMAGES.productList.height}
-              key={imageKey}
-              className="w-full"
-              priority={index === 0}
-            />
-          )
-        })}
-      </Carousel>
+      {images.length > 1 ? (
+        <Carousel>
+          {images.map((image, index) => {
+            const imageKey = `image-${index}`
+            return (
+              <Image
+                src={image.url as string}
+                alt={image.alt as string}
+                width={IMAGES.productList.width}
+                height={IMAGES.productList.height}
+                key={imageKey}
+                className="w-full"
+                priority={index === 0}
+              />
+            )
+          })}
+        </Carousel>
+      ) : (
+        <div className="bg-gray-300">
+          <Image
+            src={images[0].url as string}
+            alt={images[0].alt as string}
+            width={IMAGES.productList.width}
+            height={IMAGES.productList.height}
+            key="image-0"
+            className="w-full"
+            priority
+          />
+        </div>
+      )}
     </div>
   )
 }

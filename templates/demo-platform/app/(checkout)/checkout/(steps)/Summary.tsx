@@ -8,7 +8,7 @@ import {
 } from 'react'
 import type {Cart, Coupon} from '@xcart/storefront'
 import produce from 'immer'
-import {useAtomValue} from 'jotai'
+import {useAtom, useAtomValue} from 'jotai'
 import Link from 'next/link'
 import {useRouter, useSelectedLayoutSegment} from 'next/navigation'
 import {useNotification} from '~/components/checkout/Notification'
@@ -20,7 +20,11 @@ import {tailwindMerge} from '~/helpers'
 import {ApplyCoupon} from './ApplyCoupon'
 import {CartItemsDrawer} from './CartItemsDrawer'
 import {deleteCoupon, placeOrder} from '../actions'
-import {isAddressesValidAtom} from '../store'
+import {
+  isAddressesValidAtom,
+  isSubmittingAtom,
+  xPaymentsWidgetAtom,
+} from '../store'
 
 const steps = [
   {
@@ -110,6 +114,8 @@ function CouponsSection({coupons}: {coupons: ExtendedCoupon[]}) {
 function PlaceOrder({disabled}: {disabled: boolean}) {
   const [isPending, startClientTransition] = useTransition()
   const {setNotification} = useNotification()
+  const widget = useAtomValue(xPaymentsWidgetAtom)
+  const [isSubmitting, setIsSubmitting] = useAtom(isSubmittingAtom)
 
   async function submit() {
     const result = await placeOrder()
@@ -123,14 +129,28 @@ function PlaceOrder({disabled}: {disabled: boolean}) {
   }
 
   return (
-    <form>
-      <ButtonWithSpinner
-        disabled={disabled || isPending}
-        buttonTitle="Place Order"
-        className="w-full px-0"
-        onClick={() => startClientTransition(() => submit())}
-        showSpinner={isPending}
-      />
+    <form id="form">
+      {!widget ? (
+        <ButtonWithSpinner
+          disabled={disabled || isPending}
+          buttonTitle="Place Order"
+          className="w-full px-0"
+          onClick={() => startClientTransition(() => submit())}
+          showSpinner={isPending}
+        />
+      ) : (
+        <ButtonWithSpinner
+          type="submit"
+          disabled={disabled || isSubmitting}
+          buttonTitle="Place Order"
+          className="w-full px-0"
+          onClick={() => {
+            setIsSubmitting(true)
+            widget.submit()
+          }}
+          showSpinner={isSubmitting}
+        />
+      )}
     </form>
   )
 }

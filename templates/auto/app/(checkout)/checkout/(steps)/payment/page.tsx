@@ -37,14 +37,6 @@ export default async function Page() {
   }
 
   return (
-    <div>
-      <h2 className="pb-unit-3">Payment Method</h2>
-      <form>
-        <PaymentMethodForm
-          methods={paymentMethods['hydra:member']}
-          paymentMethodId={cart.payment?.id}
-        />
-      </form>
-    </div>
+    <PaymentMethodForm methods={paymentMethods['hydra:member']} cart={cart} />
   )
 }

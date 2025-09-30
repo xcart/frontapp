@@ -1,12 +1,11 @@
 import {MMYLevelsSetupItem} from '@xcart/storefront'
-import {getXCartClient} from '../../../app/client'
+import {client} from 'utils/unauthenticated-client'
+import {getMMYLevelsByPage} from '~/components/mmy/functions/getMMYLevelsByPage'
 
-export const getInitMMY: any = async () => {
-  const client = await getXCartClient()
-
+export const getInitMMY = async () => {
   const [levels, rootLevel] = await Promise.all([
     await client.mmy.getMMYLevels(),
-    await client.mmy.getMMYLevel('1'),
+    await getMMYLevelsByPage({client, depth: '1'}),
   ])
 
   const availLevels: MMYLevelsSetupItem[] = []
@@ -19,6 +18,6 @@ export const getInitMMY: any = async () => {
 
   return {
     levels: availLevels,
-    rootLevel: rootLevel['hydra:member'],
+    rootLevel,
   }
 }

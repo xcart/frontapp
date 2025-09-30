@@ -14,7 +14,7 @@ export function Price({
     currency: CURRENCY,
   })
 
-  if (!price) {
+  if (typeof price === 'undefined') {
     return null
   }
 

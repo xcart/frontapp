@@ -11,7 +11,6 @@ import {
 } from '~/components/cart/functions/helpers'
 import {ProductToAdd} from '~/components/cart/interface'
 import {cartAtom} from '~/components/cart/store'
-// import {ButtonWithSpinner} from '~/components/elements/Button'
 import {DiscountedPrice} from '~/components/product/DiscountedPrice'
 import {SelectedAttributes} from '~/components/product/interface'
 import {ProductAttributes} from '~/components/product/ProductAttributes'
@@ -126,9 +125,7 @@ export function ProductBuyBox({
                   productPrice={product.price}
                   productSalePrice={product.salePrice}
                   productMarketPrice={product.marketPrice}
-                  priceModifier={
-                    !product.isVariant ? calculatePriceModifier : undefined
-                  }
+                  priceModifier={calculatePriceModifier || undefined}
                   wrapperStyles="flex items-center"
                 />
               </div>

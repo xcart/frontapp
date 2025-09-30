@@ -60,7 +60,7 @@ export function DesktopMyAccount({user}: {user: boolean}) {
               <SignInSignUpView
                 nextView={() => setCurrentView('forgot_password')}
               />
-              <ForgotPasswordView />
+              <ForgotPasswordView visible={currentView === 'forgot_password'} />
             </div>
           )}
           {currentView === 'my_account' && (

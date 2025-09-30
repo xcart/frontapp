@@ -39,10 +39,10 @@ export function DesktopHeader({categories}: {categories: Category[]}) {
         </div>
         <div className="flex items-center">
           <Search popular={categories} />
-          <ButtonIcon className="ml-unit-3">
+          <ButtonIcon className="ml-unit-3 h-unit-6 w-unit-6">
             <IconHeart />
           </ButtonIcon>
-          <ButtonIcon className="ml-unit-3">
+          <ButtonIcon className="ml-unit-3 h-unit-6 w-unit-6">
             <IconCart />
           </ButtonIcon>
         </div>

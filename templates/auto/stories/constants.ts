@@ -1,24 +1,29 @@
-import {Product, ProductDetailed} from '@xcart/storefront'
+import {
+  MMYLevel,
+  MMYLevelsSetupItem,
+  Product,
+  ProductDetailed,
+} from '@xcart/storefront'
 import {SelectedAttributes} from '~/components/product/interface'
 
 export const ROOT_CATEGORIES = [
-  {id: 1, name: 'Men', cleanUrl: 'men'},
-  {id: 2, name: 'Women', cleanUrl: 'women'},
-  {id: 4, name: 'Children', cleanUrl: 'children'},
+  {id: 1, name: 'Interior', cleanUrl: 'interior'},
+  {id: 2, name: 'Exterior', cleanUrl: 'exterior'},
+  {id: 3, name: 'Performance', cleanUrl: 'performance'},
 ]
 
 export const SUBCATEGORIES = [
-  {id: 1, name: 'Men', cleanUrl: 'men'},
-  {id: 2, name: 'Women', cleanUrl: 'women'},
-  {id: 4, name: 'Children', cleanUrl: 'children'},
-  {id: 5, name: 'Sale', cleanUrl: 'sale'},
-  {id: 6, name: 'New arrivals', cleanUrl: 'new-arrivals'},
+  {id: 1, name: 'Interior', cleanUrl: 'interior'},
+  {id: 2, name: 'Exterior', cleanUrl: 'exterior'},
+  {id: 3, name: 'Performance', cleanUrl: 'performance'},
+  {id: 4, name: 'Sale', cleanUrl: 'sale'},
+  {id: 5, name: 'New arrivals', cleanUrl: 'new-arrivals'},
 ]
 
 export const BREADCRUMBS = [
   {id: 1, name: 'Home', cleanUrl: '/home'},
   {id: 2, name: 'Category', cleanUrl: '/category'},
-  {id: 2, name: 'Product', cleanUrl: '/product'},
+  {id: 3, name: 'Product', cleanUrl: '/product'},
 ]
 
 export const TABS = [
@@ -44,19 +49,19 @@ export const TABS = [
 
 export const IMAGES = [
   {
-    url: 'storybook-product-image.jpg',
+    url: 'storybook-product-image.jpeg',
     width: 720,
     height: 720,
     alt: '',
   },
   {
-    url: 'storybook-product-image2.jpg',
+    url: 'storybook-product-image2.jpeg',
     width: 720,
     height: 720,
     alt: '',
   },
   {
-    url: 'storybook-product-image3.jpg',
+    url: 'storybook-product-image3.jpeg',
     width: 720,
     height: 720,
     alt: '',
@@ -259,7 +264,7 @@ export const PRODUCTS: Product[] = [
     cleanUrl: 'test-product',
     images: [
       {
-        url: 'storybook-product-image.jpg',
+        url: 'storybook-product-image.jpeg',
         width: 720,
         height: 720,
         alt: 'Test product alt',
@@ -275,7 +280,7 @@ export const PRODUCTS: Product[] = [
     cleanUrl: 'test-product-2',
     images: [
       {
-        url: 'storybook-product-image.jpg',
+        url: 'storybook-product-image.jpeg',
         width: 720,
         height: 720,
         alt: 'Test product 2 alt',
@@ -291,7 +296,7 @@ export const PRODUCTS: Product[] = [
     cleanUrl: 'test-product-3',
     images: [
       {
-        url: 'storybook-product-image.jpg',
+        url: 'storybook-product-image.jpeg',
         width: 720,
         height: 720,
         alt: 'Test product 3 alt',
@@ -307,7 +312,7 @@ export const PRODUCTS: Product[] = [
     cleanUrl: 'test-product-4',
     images: [
       {
-        url: 'storybook-product-image.jpg',
+        url: 'storybook-product-image.jpeg',
         width: 720,
         height: 720,
         alt: 'Test product 4 alt',
@@ -326,7 +331,7 @@ export const PRODUCTS2: Product[] = [
     cleanUrl: 'test-product',
     images: [
       {
-        url: 'storybook-product-image2.jpg',
+        url: 'storybook-product-image2.jpeg',
         width: 720,
         height: 720,
         alt: 'Test product alt',
@@ -342,7 +347,7 @@ export const PRODUCTS2: Product[] = [
     cleanUrl: 'test-product-2',
     images: [
       {
-        url: 'storybook-product-image2.jpg',
+        url: 'storybook-product-image2.jpeg',
         width: 720,
         height: 720,
         alt: 'Test product 2 alt',
@@ -358,7 +363,7 @@ export const PRODUCTS2: Product[] = [
     cleanUrl: 'test-product-3',
     images: [
       {
-        url: 'storybook-product-image2.jpg',
+        url: 'storybook-product-image2.jpeg',
         width: 720,
         height: 720,
         alt: 'Test product 3 alt',
@@ -374,7 +379,7 @@ export const PRODUCTS2: Product[] = [
     cleanUrl: 'test-product-4',
     images: [
       {
-        url: 'storybook-product-image2.jpg',
+        url: 'storybook-product-image2.jpeg',
         width: 720,
         height: 720,
         alt: 'Test product 4 alt',
@@ -383,6 +388,115 @@ export const PRODUCTS2: Product[] = [
     price: 40,
     salePrice: 20,
     marketPrice: 0,
+  },
+]
+
+export const LEVELS_SETUP: MMYLevelsSetupItem[] = [
+  {'@type': 'MmyLevelsSetupItem', enabled: true, name: 'make', type: 'text'},
+  {'@type': 'MmyLevelsSetupItem', enabled: true, name: 'model', type: 'text'},
+  {'@type': 'MmyLevelsSetupItem', enabled: true, name: 'year', type: 'text'},
+  {'@type': 'MmyLevelsSetupItem', enabled: true, name: 'engine', type: 'text'},
+]
+
+export const ROOT_LEVEL: MMYLevel[] = [
+  {
+    '@id': '',
+    '@type': 'MMY Level',
+    name: 'AUDI',
+    title: '',
+    description: '',
+    parent_level_id: null,
+    logo_url: undefined,
+    banner_urls: [],
+    id: 9,
+  },
+  {
+    '@id': '',
+    '@type': 'MMY Level',
+    name: 'BMW',
+    title: '',
+    description: '',
+    parent_level_id: null,
+    logo_url: undefined,
+    banner_urls: [],
+    id: 14,
+  },
+  {
+    '@id': '',
+    '@type': 'MMY Level',
+    name: 'CADILLAC',
+    title: '',
+    description: '',
+    parent_level_id: null,
+    logo_url: undefined,
+    banner_urls: [],
+    id: 27,
+  },
+  {
+    '@id': '',
+    '@type': 'MMY Level',
+    name: 'CHRYSLER',
+    title: '',
+    description: '',
+    parent_level_id: null,
+    logo_url: undefined,
+    banner_urls: [],
+    id: 28,
+  },
+  {
+    '@id': '',
+    '@type': 'MMY Level',
+    name: 'FORD',
+    title: '',
+    description: '',
+    parent_level_id: null,
+    logo_url: undefined,
+    banner_urls: [],
+    id: 2,
+  },
+  {
+    '@id': '',
+    '@type': 'MMY Level',
+    name: 'LAND ROVER',
+    title: '',
+    description: '',
+    parent_level_id: null,
+    logo_url: undefined,
+    banner_urls: [],
+    id: 12,
+  },
+  {
+    '@id': '',
+    '@type': 'MMY Level',
+    name: 'LEXUS',
+    title: '',
+    description: '',
+    parent_level_id: null,
+    logo_url: undefined,
+    banner_urls: [],
+    id: 22,
+  },
+  {
+    '@id': '',
+    '@type': 'MMY Level',
+    name: 'MERCEDES',
+    title: '',
+    description: '',
+    parent_level_id: null,
+    logo_url: undefined,
+    banner_urls: [],
+    id: 25,
+  },
+  {
+    '@id': '',
+    '@type': 'MMY Level',
+    name: 'TOYOTA',
+    title: '',
+    description: '',
+    parent_level_id: null,
+    logo_url: undefined,
+    banner_urls: [],
+    id: 18,
   },
 ]
 

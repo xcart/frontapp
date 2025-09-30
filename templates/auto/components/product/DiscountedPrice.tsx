@@ -11,7 +11,7 @@ export function DiscountedPrice({
   baseStyles,
   saleStyles,
 }: {
-  productPrice?: number
+  productPrice?: number | null
   productMarketPrice?: number
   productSalePrice?: number
   priceModifier?: number
@@ -35,7 +35,7 @@ export function DiscountedPrice({
 
   return (
     <div className={wrapperStyles}>
-      {discountedPrice && (
+      {typeof discountedPrice !== 'undefined' && (
         <Price
           price={discountedPrice}
           productPriceClasses={tailwindMerge(

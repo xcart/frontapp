@@ -2,7 +2,7 @@
 
 import {useState} from 'react'
 import {CartItem} from '@xcart/storefront'
-import {useAtom} from 'jotai'
+import {useAtom, useAtomValue} from 'jotai'
 import Cookies from 'js-cookie'
 import {
   clearCart,
@@ -13,6 +13,7 @@ import {cartAtom} from '~/components/cart/store'
 import {Button, ButtonWithSpinner} from '~/components/elements/Button'
 import {IconMinus, IconPlus} from '~/components/elements/Icons'
 import {Spinner} from '~/components/elements/Spinner'
+import {attributeTextareaAtom} from '~/components/product/AttributeTextarea/store'
 import {tailwindMerge} from '~/helpers'
 import {
   addToCart,
@@ -62,6 +63,7 @@ export function AddToCartButton({
 }) {
   const [loading, setLoading] = useState<boolean>(false)
   const [cart, setCart] = useAtom(cartAtom)
+  const textAttributeValue = useAtomValue(attributeTextareaAtom)
 
   const handleProduct = ({
     remove,
@@ -76,6 +78,16 @@ export function AddToCartButton({
 
     let allProductsInCartCount: number = 0
 
+    const updatedProductAttributes = Object.keys(textAttributeValue).length
+      ? [...productToAdd.attributes, textAttributeValue]
+      : productToAdd.attributes
+
+    const updatedProductToAdd: ProductToAdd = {
+      id: productToAdd.id,
+      amount: productToAdd.amount,
+      attributes: updatedProductAttributes,
+    }
+
     if (cart?.items?.length) {
       cart.items.forEach((item: CartItem) => {
         if (item.amount) {
@@ -83,10 +95,13 @@ export function AddToCartButton({
         }
 
         if (
-          item.productId === productToAdd.id &&
+          item.productId === updatedProductToAdd.id &&
           update &&
           item.amount &&
-          hasSameAttributesByValueId(item.attributes, productToAdd.attributes)
+          hasSameAttributesByValueId(
+            item.attributes,
+            updatedProductToAdd.attributes,
+          )
         ) {
           cartItemId = item.id
 
@@ -94,8 +109,9 @@ export function AddToCartButton({
             allProductsInCartCount -= 1
           }
 
-          // eslint-disable-next-line no-param-reassign
-          productToAdd.amount = remove ? item.amount - 1 : item.amount + 1
+          updatedProductToAdd.amount = remove
+            ? item.amount - 1
+            : item.amount + 1
         }
       })
 
@@ -109,7 +125,7 @@ export function AddToCartButton({
 
     processProductInCart(
       cart?.id || cartId,
-      productToAdd,
+      updatedProductToAdd,
       remove,
       update,
       cartItemId,

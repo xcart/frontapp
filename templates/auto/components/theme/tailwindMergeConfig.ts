@@ -83,6 +83,7 @@ export const tailwindMergeConfig: {
         'invariant-mmy-dark',
         'invariant-gray-300',
         'invariant-gray-500',
+        'rgb-gray-300',
       ],
     ),
     ...generateTwClassesGroup(

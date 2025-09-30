@@ -75,6 +75,9 @@ module.exports = {
           500: 'var(--color-gray-500)',
           700: 'var(--color-gray-700)',
         },
+        'rgb-gray': {
+          300: 'rgb(var(--color-rgb-gray-300))',
+        },
         error: 'var(--color-error)',
         'error-alert': 'var(--color-error-alert)',
         warning: 'var(--color-warning)',
@@ -90,6 +93,7 @@ module.exports = {
         'invariant-mmy-dark': 'var(--color-invariant-mmy-dark)',
         'invariant-gray-300': 'var(--color-invariant-gray-300)',
         'invariant-gray-500': 'var(--color-invariant-gray-500)',
+        readonly: 'rgba(var(--color-rgb-gray-300), <alpha-value>)',
       },
       height: {
         header: BASE_UNIT * 12,

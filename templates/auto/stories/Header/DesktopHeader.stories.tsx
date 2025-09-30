@@ -1,5 +1,4 @@
 import {StoryObj, Meta} from '@storybook/react'
-import {Category} from '@xcart/storefront'
 import {DesktopHeader} from './DesktopHeader'
 import {ROOT_CATEGORIES} from '../constants'
 

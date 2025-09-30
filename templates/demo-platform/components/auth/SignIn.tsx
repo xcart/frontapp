@@ -13,6 +13,11 @@ import {ButtonWithSpinner} from '~/components/elements/Button'
 import {useDrawer} from '~/components/elements/Drawer'
 import {Input} from '~/components/elements/Input'
 import {PasswordInput} from '~/components/elements/PasswordInput'
+import {
+  getWishlist,
+  mergeWishlist,
+} from '~/components/wishlist/functions/wishlistActions'
+import {wishlistItems} from '~/components/wishlist/store'
 import {RememberMe} from './RememberMe'
 import {clearClient} from '../../lib/getClient'
 import {clearCartId, getCart} from '../cart/functions/cartActions'
@@ -40,6 +45,7 @@ export function SignIn() {
   })
   const {setAlert} = useDrawer()
   const [cart, setCart] = useAtom(cartAtom)
+  const [wishlist, setWishlist] = useAtom(wishlistItems)
 
   async function signin(data: any) {
     setSubmitted(true)
@@ -58,12 +64,26 @@ export function SignIn() {
       setTimeout(() => setSubmitted(false), 2000)
       setAlert(null)
 
-      if (cart.id) {
+      if (cart?.id) {
         await mergeAnonymousCart(cart.id, setCart)
       } else {
         const newCart = await getCart()
         if (newCart) {
           setCart(newCart)
+        }
+      }
+
+      if (wishlist?.length) {
+        const updatedWishlist = await mergeWishlist(wishlist)
+
+        if (updatedWishlist && updatedWishlist.productIds?.length) {
+          setWishlist(updatedWishlist.productIds)
+        }
+      } else {
+        const customerWishlist = await getWishlist()
+
+        if (customerWishlist && customerWishlist.productIds?.length) {
+          await setWishlist(customerWishlist.productIds)
         }
       }
     }

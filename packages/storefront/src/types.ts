@@ -87,18 +87,22 @@ export type Brand = components['schemas']['Brand.Compact.jsonld-read']
 
 export type ProductFitment = components['schemas']['ProductFitment.jsonld-read']
 
+export type Coupon = components['schemas']['Cart.coupon-read']
+
+export type ShippingRate = components['schemas']['ShippingRate.jsonld-read']
+
+export type Address = components['schemas']['Cart.Address.jsonld-read']
+
+export type CustomerWishlist = components['schemas']['Wishlist.jsonld-read']
+
+export type UserData = components['schemas']['User.jsonld-read']
+
 export interface PaginatedProducts {
   products: Product[]
   total: number | undefined
   nextPage: number | undefined
   lastPage: number
 }
-
-export type Coupon = components['schemas']['Cart.coupon-read']
-
-export type ShippingRate = components['schemas']['ShippingRate.jsonld-read']
-
-export type Address = components['schemas']['Cart.Address.jsonld-read']
 
 export interface PaginatedBrands {
   brands: Brand[]

@@ -62,11 +62,11 @@ export function Cart() {
               {item.attributes.length > 0 && (
                 <div className="mb-unit-2 flex gap-unit-4 text-sm">
                   {item.attributes.map((attribute: any) => {
-                    return (
-                      <div key={attribute.attributeValueId}>
+                    return attribute.attributeValue ? (
+                      <div key={`${attribute.name}-${attribute.attributeId}`}>
                         {attribute.name}: {attribute.attributeValue}
                       </div>
-                    )
+                    ) : null
                   })}
                 </div>
               )}

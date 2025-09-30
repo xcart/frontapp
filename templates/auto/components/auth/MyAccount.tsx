@@ -1,9 +1,10 @@
 import {useSetAtom} from 'jotai'
-import {useRouter} from 'next/navigation'
+import {useRouter, usePathname} from 'next/navigation'
 import {signOut} from 'next-auth/react'
 import {cartAtom} from '~/components/cart/store'
 import {myGarageItemsAtom, selectedVehicleAtom} from '~/components/mmy/store'
 import {Link} from '~/components/navigation/link'
+import {wishlistItems} from '~/components/wishlist/store'
 import {clearClient} from '../../lib/getClient'
 import {clearCartId} from '../cart/functions/cartActions'
 
@@ -15,7 +16,9 @@ export function MyAccount({
   const setCart = useSetAtom(cartAtom)
   const setGarage = useSetAtom(myGarageItemsAtom)
   const setSelectedVehicle = useSetAtom(selectedVehicleAtom)
+  const setWishlist = useSetAtom(wishlistItems)
   const router = useRouter()
+  const pathname = usePathname()
 
   async function logout() {
     instantLogout()
@@ -25,24 +28,19 @@ export function MyAccount({
     setCart({})
     setGarage([])
     setSelectedVehicle({})
+    setWishlist([])
     router.refresh()
+
+    if (pathname?.substring(1) === 'profile') {
+      router.push('/')
+    }
   }
 
   return (
     <div>
       <ul className="flex flex-col gap-unit-2">
         <li>
-          <Link href="/" className="no-underline">
-            Orders History
-          </Link>
-        </li>
-        <li>
-          <Link href="/" className="no-underline">
-            Address Book
-          </Link>
-        </li>
-        <li>
-          <Link href="/" className="no-underline">
+          <Link href="/profile" className="no-underline">
             Profile Details
           </Link>
         </li>

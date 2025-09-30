@@ -295,19 +295,7 @@ export function Drawer({
               ...panelDirection,
             }}
           >
-            {alert && (
-              <Alert
-                message={alert}
-                closeButton={
-                  <CloseButton
-                    onClick={() => setAlert(null)}
-                    className="absolute right-unit-4 top-unit-2 hover:bg-inherit"
-                  >
-                    <IconClose className="fill-gray-700" />
-                  </CloseButton>
-                }
-              />
-            )}
+            {alert && <Alert message={alert} closeButton />}
             {/* @ts-ignore */}
             <div style={{height: '100%', overflowY: 'auto'}} ref={panelRef}>
               {children}

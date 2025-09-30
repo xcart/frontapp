@@ -4,7 +4,7 @@ export function Label({
   productPrice,
   productSalePrice,
 }: {
-  productPrice?: number
+  productPrice?: number | null
   productSalePrice?: number
 }) {
   const hasSaleLabel =

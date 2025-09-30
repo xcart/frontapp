@@ -21,7 +21,7 @@ export const getMMYLevel = async (
   depth: string,
   params?: {'filter.parent'?: number},
 ) => {
-  const levels: any = await unauthenticated.mmy.getMMYLevel(depth, params)
+  const levels = await unauthenticated.mmy.getMMYLevel(depth, params)
 
   return levels['hydra:member']
 }

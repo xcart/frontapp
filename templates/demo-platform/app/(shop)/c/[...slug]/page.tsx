@@ -54,7 +54,7 @@ export default async function Page({
     getSortedPaginatedProducts(pageParams),
   ]
 
-  let categoryCleanUrl = category.cleanUrl
+  let categoryCleanUrl = cleanUrl
 
   if (category.hasSubcategories) {
     dataPromises.push(client.getSubcategories(categoryId))
@@ -67,7 +67,11 @@ export default async function Page({
     for (const path of category.path) {
       const index = category.path.indexOf(path)
       if (category.path && path.cleanUrl === category.cleanUrl) {
-        categoryCleanUrl = category.path[index - 1].cleanUrl
+        categoryCleanUrl = category.cleanUrl?.length
+          ? // eslint-disable-next-line no-unsafe-optional-chaining
+            cleanUrl.slice(0, -(category.cleanUrl?.length + 1))
+          : category.path[index - 1].cleanUrl
+
         dataPromises.push(
           client.getSubcategories(Number(category.path[index - 1].id)),
         )

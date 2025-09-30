@@ -290,7 +290,7 @@ export async function deleteCoupon(id: string) {
   revalidateTag(cartId)
 }
 
-export async function placeOrder() {
+export async function placeOrder(actionData: any[] = []) {
   const client = await getXCartClient()
 
   const cartId = await getCartId()
@@ -299,30 +299,54 @@ export async function placeOrder() {
     throw new Error('Cart not found')
   }
 
-  const cart = await client.cart.getCart(cartId)
+  const cart = await client.cart.getCart(cartId, {
+    next: {tags: [cartId], revalidate: 0},
+  })
 
   const initResponse = await client.other.patchPaymentItem(
     cart.paymentTransaction as string,
     cartId,
     // @ts-ignore
-    {action: 'init'},
+    {
+      action: 'init',
+      actionData,
+      actionMetaData: [
+        {
+          name: 'success_url',
+          value: `${process.env.NEXTAUTH_URL}/payment_return/${cartId}/${
+            cart.paymentTransaction as string
+          }`,
+        },
+        {
+          name: 'cancel_url',
+          value: `${process.env.NEXTAUTH_URL}/payment_cancel/${cartId}/${
+            cart.paymentTransaction as string
+          }`,
+        },
+      ],
+    },
     {
       next: {revalidate: 0},
     },
   )
 
-  if (!initResponse.actionData?.length) {
-    await client.other.patchPaymentItem(
-      cart.paymentTransaction as string,
-      cartId,
-      // @ts-ignore
-      {action: 'pay'},
-      {
-        next: {revalidate: 0},
-      },
-    )
+  if (!initResponse.actionMetaData?.length) {
+    if (initResponse.status === 'P') {
+      await client.other.patchPaymentItem(
+        cart.paymentTransaction as string,
+        cartId,
+        // @ts-ignore
+        {action: 'pay'},
+        {
+          next: {revalidate: 0},
+        },
+      )
+    } else if (initResponse.status === 'F') {
+      revalidateTag(cartId)
+      return {error: 'Error, try again'}
+    }
   } else {
-    // TODO redirect to payment page
+    redirect(initResponse.actionMetaData[0].value as string)
   }
 
   const orderResponse = await client.other.postOrderCollection(cartId, {})
@@ -338,4 +362,30 @@ export async function placeOrder() {
     // @ts-ignore
     return {error: orderResponse?.error['hydra:description']}
   }
+}
+
+export async function generateXPaymentsWidgetData(
+  paymentTransaction: string | null | undefined,
+) {
+  const client = await getXCartClient()
+
+  const cartId = await getCartId()
+
+  if (!cartId) {
+    throw new Error('Cart not found')
+  }
+
+  const response = await client.other.patchPaymentItem(
+    paymentTransaction as string,
+    cartId,
+    // @ts-ignore
+    {
+      action: 'generate_widget_data',
+    },
+    {
+      next: {revalidate: 0},
+    },
+  )
+
+  return response
 }

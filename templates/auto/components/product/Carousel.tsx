@@ -21,10 +21,15 @@ export function Carousel({children}: {children: React.ReactNode}) {
           modules={[Pagination, Scrollbar]}
           scrollbar={{draggable: true}}
           pagination={{clickable: true}}
+          className="bg-gray-300"
         >
           {React.Children.map(children, (child, index) => {
             const key = `item-${index}`
-            return <SwiperSlide key={key}>{child}</SwiperSlide>
+            return (
+              <SwiperSlide key={key} className="self-center">
+                {child}
+              </SwiperSlide>
+            )
           })}
         </Swiper>
       </div>

@@ -11,6 +11,8 @@ export const formValuesAtom = atom<Record<string, any>>({})
 export const isSameAddressAtom = atom<boolean>(true)
 export const isAddressesValidAtom = atom<boolean>(false)
 export const isRegisteredAtom = atom<boolean>(false)
+export const xPaymentsWidgetAtom = atom<any>(null)
+export const isSubmittingAtom = atom<boolean>(false)
 
 // -------------
 // actions

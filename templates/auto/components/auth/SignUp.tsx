@@ -15,7 +15,10 @@ import {useDrawer} from '~/components/elements/Drawer'
 import {Input} from '~/components/elements/Input'
 import {PasswordInput} from '~/components/elements/PasswordInput'
 import {mergeGarageAtom} from '~/components/mmy/store'
+import {mergeWishlist} from '~/components/wishlist/functions/wishlistActions'
+import {wishlistItems} from '~/components/wishlist/store'
 import {RememberMe} from './RememberMe'
+import {clearCartId} from '../cart/functions/cartActions'
 
 const schema = yup
   .object({
@@ -33,7 +36,10 @@ const schema = yup
       .min(8, 'Must be at least 8 characters')
       .max(64, 'Must be at most 64 characters')
       .required('Required field')
-      .oneOf([yup.ref('password'), null], 'Passwords must match'),
+      .oneOf(
+        [yup.ref('password'), null],
+        "This password doesn't match. Try again.",
+      ),
   })
   .required()
 
@@ -50,6 +56,7 @@ export function SignUp() {
   })
   const {setAlert} = useDrawer()
   const [cart, setCart] = useAtom(cartAtom)
+  const [wishlist, setWishlist] = useAtom(wishlistItems)
   const mergeGarage = useSetAtom(mergeGarageAtom)
 
   async function signup(data: any) {
@@ -67,11 +74,20 @@ export function SignUp() {
         redirect: false,
       })
       router.refresh()
+      clearCartId()
       setTimeout(() => setSubmitted(false), 2000)
       setAlert(null)
 
-      if (cart.id) {
+      if (cart?.id) {
         await mergeAnonymousCart(cart.id, setCart)
+      }
+
+      if (wishlist?.length) {
+        const updatedWishlist = await mergeWishlist(wishlist)
+
+        if (updatedWishlist && updatedWishlist.productIds?.length) {
+          setWishlist(updatedWishlist.productIds)
+        }
       }
 
       mergeGarage()
@@ -99,7 +115,7 @@ export function SignUp() {
       <PasswordInput
         label="Password *"
         wrapperClasses="w-full mb-0 md:mr-unit-4"
-        placeholder="password"
+        placeholder="Enter Password"
         error={!!errors.password}
         errorText={
           errors.password ? (errors.password.message as string) : undefined
@@ -111,7 +127,7 @@ export function SignUp() {
       <PasswordInput
         label="Confirm Password *"
         wrapperClasses="w-full mb-0 md:mr-unit-4"
-        placeholder="password"
+        placeholder="Confirm Password"
         error={!!errors.confirm_password}
         errorText={
           errors.confirm_password

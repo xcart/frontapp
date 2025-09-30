@@ -1,3 +1,4 @@
+import {Suspense} from 'react'
 import {Metadata} from 'next'
 import {Poppins} from 'next/font/google'
 import {ColorModeProvider} from '~/components/providers/ColorModeContext'
@@ -63,7 +64,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       <body className="bg-contrast leading-base text-primary antialiased">
         <MagicScriptTag />
         <ColorModeProvider>
-          <Providers>{children}</Providers>
+          <Providers>
+            <Suspense>{children}</Suspense>
+          </Providers>
         </ColorModeProvider>
       </body>
     </html>

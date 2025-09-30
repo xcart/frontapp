@@ -1,4 +1,5 @@
 import {useId} from 'react'
+import {MMYLevel} from '@xcart/storefront'
 import {SelectNative} from '~/components/elements/SelectNative'
 import {componentOrNull, tailwindMerge} from '~/helpers'
 
@@ -13,7 +14,7 @@ export function LevelSelect({
   disabled,
   isDrawer,
 }: {
-  level: any[]
+  level: MMYLevel[]
   name: string
   className?: string
   labelClasses?: string

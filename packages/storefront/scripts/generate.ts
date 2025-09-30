@@ -27,6 +27,10 @@ const tagToClassMapping = {
   'MMY Level': 'mmy',
   'MMY Levels Setup': 'mmy',
   'Vin lookup': 'mmy',
+  Wishlist: 'wishlist',
+  'Wishlist Product': 'wishlist',
+  'Wishlist merge request': 'wishlist',
+  'Wishlist clear request': 'wishlist',
 }
 
 const operationIdConverter = function (operationId: string): string {
@@ -60,6 +64,13 @@ const operationIdConverter = function (operationId: string): string {
     'getMMY LevelItem': 'getMMYLevelById',
     'getMMY Levels SetupItem': 'getMMYLevels',
     'getVin lookupItem': 'getVehicleByVIN',
+    getWishlistItem: 'getWishlist',
+    getByHashWishlistItem: 'getWishlistByHash',
+    'clearWishlist clear requestCollection': 'clearWishlist',
+    'mergeWishlist merge requestCollection': 'mergeWishlist',
+    'postWishlist ProductCollection': 'addToWishlist',
+    'getWishlist ProductItem': 'getWishlistProduct',
+    'deleteWishlist ProductItem': 'deleteFromWishlist',
   }
 
   return mapping[operationId] ?? operationId.replace(/\s/g, '')
@@ -233,6 +244,10 @@ export async function generate(): Promise<void> {
     },
     mmy: {
       name: 'mmy',
+      functions: [],
+    },
+    wishlist: {
+      name: 'wishlist',
       functions: [],
     },
     other: {

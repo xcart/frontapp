@@ -68,7 +68,7 @@ export function Pagination({
   }
 
   const baseStyles = tailwindMerge(
-    'p-0 min-w-unit-8 w-unit-8 h-unit-8 flex items-center justify-center transition rounded',
+    'p-0 px-unit min-w-unit-8 h-unit-8 flex items-center justify-center transition rounded',
     isFetching ? 'pointer-events-none cursor-progress' : '',
   )
 

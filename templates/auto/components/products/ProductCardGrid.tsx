@@ -25,8 +25,7 @@ export function ProductCardGrid({
       )}
       <ProductImage
         product={product}
-        imageClasses="mb-unit-2 bg-gray-300 overflow-hidden"
-        noImageClasses="p-[50%]"
+        imageClasses="relative p-[50%] mb-unit-2 bg-gray-300 overflow-hidden"
         hasLink
       />
       <Label

@@ -363,6 +363,38 @@ export interface paths {
     patch: operations["patchUser AddressItem"];
     parameters: {};
   };
+  "/api/storefront/wishlist": {
+    /** Retrieve the wishlist. */
+    get: operations["getWishlistItem"];
+    parameters: {};
+  };
+  "/api/storefront/wishlist/by_hash/{hash}": {
+    /** Retrieve the wishlist by hash. */
+    get: operations["getByHashWishlistItem"];
+    parameters: {};
+  };
+  "/api/storefront/wishlist/clear": {
+    /** Clear the wishlist. */
+    post: operations["clearWishlist clear requestCollection"];
+    parameters: {};
+  };
+  "/api/storefront/wishlist/merge": {
+    /** Add one or more products to wishlist. */
+    post: operations["mergeWishlist merge requestCollection"];
+    parameters: {};
+  };
+  "/api/storefront/wishlist/product": {
+    /** Add product to wishlist. */
+    post: operations["postWishlist ProductCollection"];
+    parameters: {};
+  };
+  "/api/storefront/wishlist/product/{id}": {
+    /** Retrieve a  wishlist  product. */
+    get: operations["getWishlist ProductItem"];
+    /** Delete product from wishlist. */
+    delete: operations["deleteWishlist ProductItem"];
+    parameters: {};
+  };
 }
 
 export interface components {
@@ -1123,6 +1155,25 @@ export interface components {
       countries?: string[];
       id?: number | null;
     };
+    "FileAttachment-read": {
+      title?: string;
+      description?: string;
+      url?: string;
+    };
+    "FileAttachment.jsonld-read": {
+      "@context"?:
+        | string
+        | ({
+            "@vocab": string;
+            /** @enum {string} */
+            hydra: "http://www.w3.org/ns/hydra/core#";
+          } & { [key: string]: unknown });
+      "@id"?: string;
+      "@type"?: string;
+      title?: string;
+      description?: string;
+      url?: string;
+    };
     "Image-read": {
       url?: string;
       width?: number | null;
@@ -1485,12 +1536,11 @@ export interface components {
       name?: string;
       cleanUrl?: string;
       briefDescription?: string;
-      price?: number;
+      price?: number | null;
       requiresShipping?: boolean;
       arrivalDate?: number;
       amount?: number;
       images?: components["schemas"]["Image-read"][];
-      marketPrice?: number;
       participateSale?: boolean;
       /** @enum {string} */
       discountType?: "sale_price" | "sale_percent";
@@ -1498,6 +1548,12 @@ export interface components {
       salePrice?: number;
       brandName?: string | null;
       stickers?: components["schemas"]["Sticker-read"][];
+      minPurchaseQuantity?: number;
+      marketPrice?: number;
+      canBeBackordered?: boolean;
+      backorderQtyLabel?: string;
+      isLimitedBackorder?: boolean;
+      backorderLimit?: number;
       id?: number | null;
     };
     "Product.Compact.jsonld-read": {
@@ -1514,12 +1570,11 @@ export interface components {
       name?: string;
       cleanUrl?: string;
       briefDescription?: string;
-      price?: number;
+      price?: number | null;
       requiresShipping?: boolean;
       arrivalDate?: number;
       amount?: number;
       images?: components["schemas"]["Image.jsonld-read"][];
-      marketPrice?: number;
       participateSale?: boolean;
       /** @enum {string} */
       discountType?: "sale_price" | "sale_percent";
@@ -1527,6 +1582,12 @@ export interface components {
       salePrice?: number;
       brandName?: string | null;
       stickers?: components["schemas"]["Sticker.jsonld-read"][];
+      minPurchaseQuantity?: number;
+      marketPrice?: number;
+      canBeBackordered?: boolean;
+      backorderQtyLabel?: string;
+      isLimitedBackorder?: boolean;
+      backorderLimit?: number;
       id?: number | null;
     };
     "Product.Detailed-read": {
@@ -1534,7 +1595,7 @@ export interface components {
       name?: string;
       cleanUrl?: string;
       briefDescription?: string;
-      price?: number;
+      price?: number | null;
       weight?: number;
       requiresShipping?: boolean;
       arrivalDate?: number;
@@ -1548,17 +1609,27 @@ export interface components {
       attributes?: components["schemas"]["ProductAttribute-read"][];
       dimensions?: components["schemas"]["ProductDimensions-read"];
       fitment?: components["schemas"]["ProductFitment-read"];
-      tags?: string[];
-      variants?: components["schemas"]["ProductVariant-read"][];
-      marketPrice?: number;
+      tabs?: components["schemas"]["ProductTab-read"][];
       participateSale?: boolean;
       /** @enum {string} */
       discountType?: "sale_price" | "sale_percent";
       saleValue?: number;
       salePrice?: number;
       brand?: Partial<components["schemas"]["Brand-read"]> | null;
-      tabs?: components["schemas"]["ProductTab-read"][];
+      attachments?: components["schemas"]["FileAttachment-read"][];
+      tags?: string[];
       stickers?: components["schemas"]["Sticker-read"][];
+      upc?: string | null;
+      mnf?: string | null;
+      variants?: components["schemas"]["ProductVariant-read"][];
+      minPurchaseQuantity?: number;
+      applySaleToWholesale?: boolean;
+      wholesalePrices?: components["schemas"]["WholesalePrice-read"][];
+      marketPrice?: number;
+      canBeBackordered?: boolean;
+      backorderQtyLabel?: string;
+      isLimitedBackorder?: boolean;
+      backorderLimit?: number;
       id?: number | null;
     };
     "Product.Detailed.jsonld-read": {
@@ -1575,7 +1646,7 @@ export interface components {
       name?: string;
       cleanUrl?: string;
       briefDescription?: string;
-      price?: number;
+      price?: number | null;
       weight?: number;
       requiresShipping?: boolean;
       arrivalDate?: number;
@@ -1589,17 +1660,27 @@ export interface components {
       attributes?: components["schemas"]["ProductAttribute.jsonld-read"][];
       dimensions?: components["schemas"]["ProductDimensions.jsonld-read"];
       fitment?: components["schemas"]["ProductFitment.jsonld-read"];
-      tags?: string[];
-      variants?: components["schemas"]["ProductVariant.jsonld-read"][];
-      marketPrice?: number;
+      tabs?: components["schemas"]["ProductTab.jsonld-read"][];
       participateSale?: boolean;
       /** @enum {string} */
       discountType?: "sale_price" | "sale_percent";
       saleValue?: number;
       salePrice?: number;
       brand?: Partial<components["schemas"]["Brand.jsonld-read"]> | null;
-      tabs?: components["schemas"]["ProductTab.jsonld-read"][];
+      attachments?: components["schemas"]["FileAttachment.jsonld-read"][];
+      tags?: string[];
       stickers?: components["schemas"]["Sticker.jsonld-read"][];
+      upc?: string | null;
+      mnf?: string | null;
+      variants?: components["schemas"]["ProductVariant.jsonld-read"][];
+      minPurchaseQuantity?: number;
+      applySaleToWholesale?: boolean;
+      wholesalePrices?: components["schemas"]["WholesalePrice.jsonld-read"][];
+      marketPrice?: number;
+      canBeBackordered?: boolean;
+      backorderQtyLabel?: string;
+      isLimitedBackorder?: boolean;
+      backorderLimit?: number;
       id?: number | null;
     };
     "ProductAttribute-read": {
@@ -1747,7 +1828,7 @@ export interface components {
     "ProductVariant-read": {
       id?: number;
       sku?: string;
-      price?: number;
+      price?: number | null;
       amount?: number;
       weight?: number;
       image?: Partial<components["schemas"]["Image-read"]> | null;
@@ -1756,6 +1837,9 @@ export interface components {
       discountType?: string;
       saleValue?: number;
       salePrice?: number;
+      upc?: string | null;
+      mnf?: string | null;
+      wholesalePrices?: components["schemas"]["WholesalePrice-read"][] | null;
     };
     "ProductVariant.jsonld-read": {
       "@context"?:
@@ -1769,7 +1853,7 @@ export interface components {
       "@type"?: string;
       id?: number;
       sku?: string;
-      price?: number;
+      price?: number | null;
       amount?: number;
       weight?: number;
       image?: Partial<components["schemas"]["Image.jsonld-read"]> | null;
@@ -1778,6 +1862,11 @@ export interface components {
       discountType?: string;
       saleValue?: number;
       salePrice?: number;
+      upc?: string | null;
+      mnf?: string | null;
+      wholesalePrices?:
+        | components["schemas"]["WholesalePrice.jsonld-read"][]
+        | null;
     };
     "Region-read": {
       code?: string;
@@ -2021,18 +2110,15 @@ export interface components {
       id?: number | null;
     };
     "User.Address-insert": {
-      profileId?: number;
       fields?: components["schemas"]["AddressFieldValue-insert"][];
     };
     "User.Address-read": {
-      profileId?: number;
       isBilling?: boolean;
       isShipping?: boolean;
       fields?: components["schemas"]["AddressFieldValue-read"][];
       id?: number | null;
     };
     "User.Address-update": {
-      profileId?: number;
       isBilling?: boolean;
       isShipping?: boolean;
       fields?: components["schemas"]["AddressFieldValue-update"][];
@@ -2047,7 +2133,6 @@ export interface components {
           } & { [key: string]: unknown });
       "@id"?: string;
       "@type"?: string;
-      profileId?: number;
       fields?: components["schemas"]["AddressFieldValue.jsonld-insert"][];
     };
     "User.Address.jsonld-read": {
@@ -2060,7 +2145,6 @@ export interface components {
             /** @enum {string} */
             hydra: "http://www.w3.org/ns/hydra/core#";
           } & { [key: string]: unknown });
-      profileId?: number;
       isBilling?: boolean;
       isShipping?: boolean;
       fields?: components["schemas"]["AddressFieldValue.jsonld-read"][];
@@ -2148,6 +2232,147 @@ export interface components {
       "@type"?: string;
       vehicle?: Partial<components["schemas"]["Vehicle.jsonld-read"]> | null;
       error?: string | null;
+    };
+    "WholesalePrice-read": {
+      quantityRangeBegin?: number;
+      quantityRangeEnd?: number | null;
+      /** @enum {string} */
+      type?: "price" | "percent";
+      value?: number;
+    };
+    "WholesalePrice.jsonld-read": {
+      "@context"?:
+        | string
+        | ({
+            "@vocab": string;
+            /** @enum {string} */
+            hydra: "http://www.w3.org/ns/hydra/core#";
+          } & { [key: string]: unknown });
+      "@id"?: string;
+      "@type"?: string;
+      quantityRangeBegin?: number;
+      quantityRangeEnd?: number | null;
+      /** @enum {string} */
+      type?: "price" | "percent";
+      value?: number;
+    };
+    "Wishlist-read": {
+      hash?: string | null;
+      productIds?: number[];
+      id?: number | null;
+    };
+    "Wishlist.Product": { [key: string]: unknown };
+    "Wishlist.Product-insert": {
+      productId?: number;
+    };
+    "Wishlist.Product-read": {
+      id?: number | null;
+    };
+    "Wishlist.Product.jsonld": {
+      "@context"?:
+        | string
+        | ({
+            "@vocab": string;
+            /** @enum {string} */
+            hydra: "http://www.w3.org/ns/hydra/core#";
+          } & { [key: string]: unknown });
+      "@id"?: string;
+      "@type"?: string;
+    };
+    "Wishlist.Product.jsonld-insert": {
+      "@context"?:
+        | string
+        | ({
+            "@vocab": string;
+            /** @enum {string} */
+            hydra: "http://www.w3.org/ns/hydra/core#";
+          } & { [key: string]: unknown });
+      "@id"?: string;
+      "@type"?: string;
+      productId?: number;
+    };
+    "Wishlist.Product.jsonld-read": {
+      "@context"?:
+        | string
+        | ({
+            "@vocab": string;
+            /** @enum {string} */
+            hydra: "http://www.w3.org/ns/hydra/core#";
+          } & { [key: string]: unknown });
+      "@id"?: string;
+      "@type"?: string;
+      id?: number | null;
+    };
+    "Wishlist.clear.request-insert_update": { [key: string]: unknown };
+    "Wishlist.clear.request-read": {
+      id?: number | null;
+    };
+    "Wishlist.clear.request.jsonld-insert_update": {
+      "@context"?:
+        | string
+        | ({
+            "@vocab": string;
+            /** @enum {string} */
+            hydra: "http://www.w3.org/ns/hydra/core#";
+          } & { [key: string]: unknown });
+      "@id"?: string;
+      "@type"?: string;
+    };
+    "Wishlist.clear.request.jsonld-read": {
+      "@context"?:
+        | string
+        | ({
+            "@vocab": string;
+            /** @enum {string} */
+            hydra: "http://www.w3.org/ns/hydra/core#";
+          } & { [key: string]: unknown });
+      "@id"?: string;
+      "@type"?: string;
+      id?: number | null;
+    };
+    "Wishlist.jsonld-read": {
+      "@context"?:
+        | string
+        | ({
+            "@vocab": string;
+            /** @enum {string} */
+            hydra: "http://www.w3.org/ns/hydra/core#";
+          } & { [key: string]: unknown });
+      "@id"?: string;
+      "@type"?: string;
+      hash?: string | null;
+      productIds?: number[];
+      id?: number | null;
+    };
+    "Wishlist.merge.request-insert": {
+      productIds?: number[];
+    };
+    "Wishlist.merge.request-read": {
+      id?: number | null;
+    };
+    "Wishlist.merge.request.jsonld-insert": {
+      "@context"?:
+        | string
+        | ({
+            "@vocab": string;
+            /** @enum {string} */
+            hydra: "http://www.w3.org/ns/hydra/core#";
+          } & { [key: string]: unknown });
+      "@id"?: string;
+      "@type"?: string;
+      productIds?: number[];
+    };
+    "Wishlist.merge.request.jsonld-read": {
+      "@context"?:
+        | string
+        | ({
+            "@vocab": string;
+            /** @enum {string} */
+            hydra: "http://www.w3.org/ns/hydra/core#";
+          } & { [key: string]: unknown });
+      "@id"?: string;
+      "@type"?: string;
+      id?: number | null;
     };
     Error: {
       /** Format: url */
@@ -3646,7 +3871,12 @@ export interface operations {
   };
   /** Create an order. */
   postOrderCollection: {
-    parameters: {};
+    parameters: {
+      path: {
+        /** Cart ID */
+        cart_id: string;
+      };
+    };
     responses: {
       /** Order resource created */
       201: {
@@ -5738,14 +5968,14 @@ export interface operations {
         "filter.categories"?: string;
         /** Filter for "outOfStock" field */
         "filter.outOfStock"?: boolean;
+        /** Filter for "participateSale" field */
+        "filter.participateSale"?: boolean;
         /** Filter for "bestsellers" field */
         "filter.bestsellers"?: boolean;
         /** Filter for "newArrivals" field */
         "filter.newArrivals"?: boolean;
         /** Filter for "comingSoon" field */
         "filter.comingSoon"?: boolean;
-        /** Filter for "participateSale" field */
-        "filter.participateSale"?: boolean;
         /** Filter for "substring" field */
         "filter.substring"?: string;
         "order_by.name"?: "asc" | "desc";
@@ -6642,6 +6872,320 @@ export interface operations {
       };
     };
   };
+  /** Retrieve the wishlist. */
+  getWishlistItem: {
+    parameters: {};
+    responses: {
+      /** Wishlist resource */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Wishlist-read"];
+          "application/ld+json": components["schemas"]["Wishlist.jsonld-read"];
+          "application/vnd.api+json": components["schemas"]["Wishlist-read"];
+          "text/html": components["schemas"]["Wishlist-read"];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+      /** Resource not found */
+      404: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+      /** Internal error */
+      500: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  /** Retrieve the wishlist by hash. */
+  getByHashWishlistItem: {
+    parameters: {
+      path: {
+        /** Resource identifier */
+        hash: string;
+      };
+    };
+    responses: {
+      /** Wishlist resource */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Wishlist-read"];
+          "application/ld+json": components["schemas"]["Wishlist.jsonld-read"];
+          "application/vnd.api+json": components["schemas"]["Wishlist-read"];
+          "text/html": components["schemas"]["Wishlist-read"];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+      /** Resource not found */
+      404: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+      /** Internal error */
+      500: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  /** Clear the wishlist. */
+  "clearWishlist clear requestCollection": {
+    parameters: {};
+    responses: {
+      /** Wishlist clear request resource created */
+      201: {
+        content: {
+          "application/json": components["schemas"]["Wishlist.clear.request-read"];
+          "application/ld+json": components["schemas"]["Wishlist.clear.request.jsonld-read"];
+          "application/vnd.api+json": components["schemas"]["Wishlist.clear.request-read"];
+          "text/html": components["schemas"]["Wishlist.clear.request-read"];
+        };
+      };
+      /** Invalid input */
+      400: unknown;
+      /** Unauthorized */
+      401: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+      /** Unprocessable entity */
+      422: unknown;
+      /** Internal error */
+      500: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+    };
+    /** The new Wishlist clear request resource */
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["Wishlist.clear.request-insert_update"];
+        "application/ld+json": components["schemas"]["Wishlist.clear.request.jsonld-insert_update"];
+        "application/vnd.api+json": components["schemas"]["Wishlist.clear.request-insert_update"];
+        "text/html": components["schemas"]["Wishlist.clear.request-insert_update"];
+      };
+    };
+  };
+  /** Add one or more products to wishlist. */
+  "mergeWishlist merge requestCollection": {
+    parameters: {};
+    responses: {
+      /** Wishlist merge request resource created */
+      201: {
+        content: {
+          "application/json": components["schemas"]["Wishlist.merge.request-read"];
+          "application/ld+json": components["schemas"]["Wishlist.merge.request.jsonld-read"];
+          "application/vnd.api+json": components["schemas"]["Wishlist.merge.request-read"];
+          "text/html": components["schemas"]["Wishlist.merge.request-read"];
+        };
+      };
+      /** Invalid input */
+      400: unknown;
+      /** Unauthorized */
+      401: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+      /** Unprocessable entity */
+      422: unknown;
+      /** Internal error */
+      500: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+    };
+    /** The new Wishlist merge request resource */
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["Wishlist.merge.request-insert"];
+        "application/ld+json": components["schemas"]["Wishlist.merge.request.jsonld-insert"];
+        "application/vnd.api+json": components["schemas"]["Wishlist.merge.request-insert"];
+        "text/html": components["schemas"]["Wishlist.merge.request-insert"];
+      };
+    };
+  };
+  /** Add product to wishlist. */
+  "postWishlist ProductCollection": {
+    parameters: {};
+    responses: {
+      /** Wishlist Product resource created */
+      201: {
+        content: {
+          "application/json": components["schemas"]["Wishlist.Product"];
+          "application/ld+json": components["schemas"]["Wishlist.Product.jsonld"];
+          "application/vnd.api+json": components["schemas"]["Wishlist.Product"];
+          "text/html": components["schemas"]["Wishlist.Product"];
+        };
+      };
+      /** Invalid input */
+      400: unknown;
+      /** Unauthorized */
+      401: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+      /** Unprocessable entity */
+      422: unknown;
+      /** Internal error */
+      500: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+    };
+    /** The new Wishlist Product resource */
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["Wishlist.Product-insert"];
+        "application/ld+json": components["schemas"]["Wishlist.Product.jsonld-insert"];
+        "application/vnd.api+json": components["schemas"]["Wishlist.Product-insert"];
+        "text/html": components["schemas"]["Wishlist.Product-insert"];
+      };
+    };
+  };
+  /** Retrieve a  wishlist  product. */
+  "getWishlist ProductItem": {
+    parameters: {
+      path: {
+        /** product id */
+        id: number;
+      };
+    };
+    responses: {
+      /** Wishlist Product resource */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Wishlist.Product-read"];
+          "application/ld+json": components["schemas"]["Wishlist.Product.jsonld-read"];
+          "application/vnd.api+json": components["schemas"]["Wishlist.Product-read"];
+          "text/html": components["schemas"]["Wishlist.Product-read"];
+        };
+      };
+      /** Unauthorized */
+      401: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+      /** Resource not found */
+      404: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+      /** Internal error */
+      500: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
+  /** Delete product from wishlist. */
+  "deleteWishlist ProductItem": {
+    parameters: {
+      path: {
+        /** product id */
+        id: number;
+      };
+    };
+    responses: {
+      /** Wishlist Product resource deleted */
+      204: never;
+      /** Unauthorized */
+      401: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+      /** Resource not found */
+      404: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+      /** Internal error */
+      500: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/ld+json": components["schemas"]["Error"];
+          "application/vnd.api+json": components["schemas"]["Error"];
+          "text/html": components["schemas"]["Error"];
+        };
+      };
+    };
+  };
 }
 
 export interface external {}
@@ -6727,3 +7271,10 @@ export type postUserAddressCollection = operations['postUser AddressCollection']
 export type getUserAddressItem = operations['getUser AddressItem']
 export type deleteUserAddressItem = operations['deleteUser AddressItem']
 export type patchUserAddressItem = operations['patchUser AddressItem']
+export type getWishlist = operations['getWishlistItem']
+export type getWishlistByHash = operations['getByHashWishlistItem']
+export type clearWishlist = operations['clearWishlist clear requestCollection']
+export type mergeWishlist = operations['mergeWishlist merge requestCollection']
+export type addToWishlist = operations['postWishlist ProductCollection']
+export type getWishlistProduct = operations['getWishlist ProductItem']
+export type deleteFromWishlist = operations['deleteWishlist ProductItem']

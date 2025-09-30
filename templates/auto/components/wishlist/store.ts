@@ -8,12 +8,14 @@ export const wishlistItems = atom(
   (get, set, itemIds: number[]) => {
     const items = itemIds?.length
 
-    if (items > 0) {
-      Cookies.set('xc-wishlist', `${items}`, {expires: 7})
-    } else {
+    if (items === 0) {
       Cookies.remove('xc-wishlist')
     }
 
     set(wishlistItemsAtom, itemIds)
+
+    if (items > 0) {
+      Cookies.set('xc-wishlist', `${items}`, {expires: 7})
+    }
   },
 )

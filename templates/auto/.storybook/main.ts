@@ -1,38 +1,37 @@
 // Refer to https://github.com/storybookjs/storybook/pull/9775
-// @ts-ignore
-const path = require('path')
+import path = require('path')
 
 module.exports = {
   stories: [
     '../stories/**/*.stories.mdx',
     '../stories/**/*.stories.@(js|jsx|ts|tsx)',
   ],
-  staticDirs: ['../public'],
+  staticDirs: ['../stories/assets'],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
-    {
-      name: '@storybook/addon-postcss',
-      options: {
-        postcssLoaderOptions: {
-          implementation: require('postcss'),
-        },
-      },
-    },
-    'storybook-addon-next',
-    'storybook-addon-next-router',
+    '@storybook/addon-mdx-gfm',
   ],
-  framework: '@storybook/react',
+  framework: '@storybook/nextjs',
   core: {
     builder: '@storybook/builder-webpack5',
   },
   webpackFinal: async (config: {
-    resolve: {alias: any}
+    resolve: {
+      alias: any
+    }
     module: {
       rules: {
         test: RegExp
-        use: {loader: string; options: {postcssOptions: {plugins: any[]}}}[]
+        use: {
+          loader: string
+          options: {
+            postcssOptions: {
+              plugins: any[]
+            }
+          }
+        }[]
         include: any
       }[]
     }
@@ -45,7 +44,6 @@ module.exports = {
       ...config.resolve?.alias,
       '@': [path.resolve(__dirname, '../src/'), path.resolve(__dirname, '../')],
     }
-
     config.module.rules.push({
       test: /\.css$/,
       use: [
@@ -61,5 +59,8 @@ module.exports = {
       include: path.resolve(__dirname, '../'),
     })
     return config
+  },
+  docs: {
+    autodocs: true,
   },
 }

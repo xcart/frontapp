@@ -1,9 +1,13 @@
-import {Level, MMYLevelsSetupItem} from '@xcart/storefront'
+import {Level, MMYLevel, MMYLevelsSetupItem} from '@xcart/storefront'
 import {atom} from 'jotai'
 import {atomWithStorage} from 'jotai/utils'
 import Cookies from 'js-cookie'
 import {updatedGarage} from '~/components/mmy/functions/helpers'
-import {GarageItem} from '~/components/mmy/functions/interface'
+import {
+  GarageItem,
+  MMYLevels,
+  SelectedMMYLevel,
+} from '~/components/mmy/functions/interface'
 import {
   addVehicle,
   clearGarage,
@@ -16,8 +20,8 @@ import {getClient} from '../../lib/getClient'
 
 export const allLevelsAtom = atom<MMYLevelsSetupItem[]>([]) // All level names, eg. Make, Model, Year, etc.
 export const drawerCurrentViewAtom = atom<string>('my_garage')
-export const levelsValuesAtom = atom<any>([])
-export const selectedVehicleLevelAtom = atom<any>({})
+export const levelsValuesAtom = atom<MMYLevels[]>([])
+export const selectedVehicleLevelAtom = atom<SelectedMMYLevel>({})
 export const selectedVehicleValuesAtom = atom<GarageItem>({})
 export const isLoadingLevelAtom = atom<boolean>(false)
 export const enableMMYButtonAtom = atom<boolean>(false)
@@ -26,7 +30,13 @@ export const shopByLevelInfoAtom = atom<Level[]>([])
 
 export const selectedLevelsValues = atom(
   get => get(levelsValuesAtom),
-  async (get, set, newValues: any, depth: number, levelsCount: number) => {
+  async (
+    get,
+    set,
+    newValues: SelectedMMYLevel,
+    depth: number,
+    levelsCount: number,
+  ) => {
     set(isLoadingLevelAtom, true)
     const levels = get(levelsValuesAtom)
     const selectedLevelName = Object.keys(newValues)[0]
@@ -42,12 +52,12 @@ export const selectedLevelsValues = atom(
         const prevSelectedLevelName = Object.keys(
           previousLevels[depthCounter - 1],
         )[0]
-        const selectedLevelItem =
+        const selectedLevelItem: MMYLevel =
           previousLevels[depthCounter - 1][prevSelectedLevelName][0]
         const selectedLevelItemName = selectedLevelItem.name
         const selectedLevelItemId = selectedLevelItem.id
 
-        const prepareSelected = {
+        const prepareSelected: SelectedMMYLevel = {
           [prevSelectedLevelName]: {
             value: selectedLevelItemName,
             id: String(selectedLevelItemId),
@@ -67,12 +77,12 @@ export const selectedLevelsValues = atom(
 
         const nextLevelName = Object.keys(previousLevels[depthCounter])[0]
 
-        const values = await getMMYLevel(String(depthCounter + 1), {
-          'filter.parent': selectedLevelItemId,
-        })
+        if (selectedLevelItemId) {
+          const values = await getMMYLevel(String(depthCounter + 1), {
+            'filter.parent': selectedLevelItemId,
+          })
 
-        if (values.length === 1) {
-          const updatedLevels = previousLevels.map((level: GarageItem) => {
+          const updatedLevels = previousLevels.map((level: MMYLevels) => {
             const levelName = Object.keys(level)[0]
             let updatedLevel = structuredClone(level)
 
@@ -84,28 +94,31 @@ export const selectedLevelsValues = atom(
           })
 
           set(levelsValuesAtom, updatedLevels)
-        }
-        depthCounter += 1
 
-        await setNextSingleLevel()
+          depthCounter += 1
+
+          if (values.length === 1) {
+            await setNextSingleLevel()
+          }
+        }
       }
 
       set(isLoadingLevelAtom, false)
     }
 
     if (selectedLevelName && depth <= levelsCount) {
-      let values = {}
+      let values: MMYLevel[] = []
 
       if (newValues[selectedLevelName].id) {
         values = await getMMYLevel(String(depth), {
-          'filter.parent': newValues[selectedLevelName].id,
+          'filter.parent': Number(newValues[selectedLevelName].id),
         })
       }
 
       const selectedLevels = structuredClone(get(selectedVehicleLevelAtom))
       let updateSelected = false
 
-      const updatedLevels = levels.map((level: any, index: number) => {
+      const updatedLevels = levels.map((level: MMYLevels, index: number) => {
         const levelName = Object.keys(level)[0]
         let updatedLevel = structuredClone(level)
 
@@ -119,7 +132,7 @@ export const selectedLevelsValues = atom(
           depth <= index + 1 &&
           levelName !== selectedLevelName
         ) {
-          updatedLevel = {...updatedLevel, ...{[levelName]: {}}}
+          updatedLevel = {...updatedLevel, ...{[levelName]: []}}
 
           Object.keys(selectedLevels).forEach((key, idx) => {
             if (idx >= index) {
@@ -134,7 +147,7 @@ export const selectedLevelsValues = atom(
           index < levelsCount &&
           depth - 1 <= index
         ) {
-          updatedLevel = {...updatedLevel, ...{[levelName]: {}}}
+          updatedLevel = {...updatedLevel, ...{[levelName]: []}}
         }
 
         return updatedLevel

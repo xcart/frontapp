@@ -1,7 +1,7 @@
 'use client'
 
 import {useEffect, useRef, useState} from 'react'
-import {MMYLevel, MMYLevelsSetupItem} from '@xcart/storefront'
+import {Garage, MMYLevel, MMYLevelsSetupItem} from '@xcart/storefront'
 import {useAtom, useAtomValue, useSetAtom} from 'jotai'
 import {useHydrateAtoms} from 'jotai/utils'
 import {Badge} from '~/components/elements/Badge'
@@ -123,8 +123,8 @@ export function MyGarageDrawer({
   vehiclesCount,
 }: {
   levels: MMYLevelsSetupItem[]
-  rootLevel?: MMYLevel
-  myGarage?: any
+  rootLevel?: MMYLevel[]
+  myGarage?: Garage
   vehiclesCount: number
 }) {
   const [mounted, setMounted] = useState<boolean>(false)

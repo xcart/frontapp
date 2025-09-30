@@ -73,6 +73,7 @@ export const tailwindMergeConfig: {
         'error-alert',
         'invariant-light',
         'invariant-dark',
+        'rgb-gray-300',
       ],
     ),
     ...generateTwClassesGroup(

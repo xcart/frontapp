@@ -19,11 +19,16 @@ async function MainContent() {
     client.getBestsellersProducts(4),
     client.getNewArrivalsProducts(4),
     client.getAllBrandsPaginated({itemsPerPage: 8}),
-    client.getMMYLevelsPaginated('1', {'filter.showOnFrontPage': true}),
+    client.getMMYLevelsPaginated('1', {
+      'filter.showOnFrontPage': true,
+      itemsPerPage: 32,
+    }),
   ])
 
-  const tabs = [
-    {
+  const tabs = []
+
+  if (bestsellers.length) {
+    tabs.push({
       name: 'Bestsellers',
       content: (
         <SectionWithButton
@@ -33,8 +38,11 @@ async function MainContent() {
         />
       ),
       disabled: false,
-    },
-    {
+    })
+  }
+
+  if (newArrivals.length) {
+    tabs.push({
       name: 'Recent Arrivals',
       content: (
         <SectionWithButton
@@ -44,16 +52,18 @@ async function MainContent() {
         />
       ),
       disabled: false,
-    },
-  ]
+    })
+  }
 
   return (
     <PageContent>
-      <Tabs
-        tabs={tabs}
-        sectionTitle="Collection"
-        tabsWrapperClasses="mb-unit-12 lg:mb-unit-16"
-      />
+      {tabs.length > 0 && (
+        <Tabs
+          tabs={tabs}
+          sectionTitle="Collection"
+          tabsWrapperClasses="mb-unit-12 lg:mb-unit-16"
+        />
+      )}
       {brands.length > 0 && (
         <SectionWithButton
           items={brands}

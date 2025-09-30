@@ -17,7 +17,7 @@ export async function MyGarageDrawerWrapper() {
     <MyGarageDrawer
       levels={levels}
       rootLevel={rootLevel || undefined}
-      myGarage={myGarage}
+      myGarage={myGarage || undefined}
       vehiclesCount={getInitGarageItemsCount()}
     />
   )

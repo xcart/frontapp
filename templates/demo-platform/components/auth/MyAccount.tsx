@@ -1,8 +1,9 @@
 import {useSetAtom} from 'jotai'
-import {useRouter} from 'next/navigation'
+import {useRouter, usePathname} from 'next/navigation'
 import {signOut} from 'next-auth/react'
 import {cartAtom} from '~/components/cart/store'
 import {Link} from '~/components/navigation/link'
+import {wishlistItems} from '~/components/wishlist/store'
 import {clearClient} from '../../lib/getClient'
 import {clearCartId} from '../cart/functions/cartActions'
 
@@ -12,7 +13,9 @@ export function MyAccount({
   instantLogout: () => void
 }) {
   const setCart = useSetAtom(cartAtom)
+  const setWishlist = useSetAtom(wishlistItems)
   const router = useRouter()
+  const pathname = usePathname()
 
   async function logout() {
     instantLogout()
@@ -20,24 +23,19 @@ export function MyAccount({
     clearCartId()
     clearClient()
     setCart({})
+    setWishlist([])
     router.refresh()
+
+    if (pathname?.substring(1) === 'profile') {
+      router.push('/')
+    }
   }
 
   return (
     <div>
       <ul className="flex flex-col gap-unit-2">
         <li>
-          <Link href="/" className="no-underline">
-            Orders History
-          </Link>
-        </li>
-        <li>
-          <Link href="/" className="no-underline">
-            Address Book
-          </Link>
-        </li>
-        <li>
-          <Link href="/" className="no-underline">
+          <Link href="/profile" className="no-underline">
             Profile Details
           </Link>
         </li>

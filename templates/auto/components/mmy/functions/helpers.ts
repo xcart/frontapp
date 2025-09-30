@@ -1,5 +1,5 @@
 import {Garage, MMYLevel, MMYLevelsSetupItem, Vehicle} from '@xcart/storefront'
-import {GarageItem} from '~/components/mmy/functions/interface'
+import {GarageItem, MMYLevels} from '~/components/mmy/functions/interface'
 
 export const prepareGarageItem = ({id, name, depth, levels}: GarageItem) => {
   return {
@@ -27,9 +27,9 @@ export const updatedGarage = (garage: Garage) => {
 
 export const prepareLevels = (
   levels: MMYLevelsSetupItem[],
-  rootLevel?: MMYLevel,
+  rootLevel?: MMYLevel[],
 ) => {
-  let levelValues: any[] = []
+  let levelValues: MMYLevels[] = []
 
   if (rootLevel && levels && levels.length > 0) {
     const {name} = levels[0]

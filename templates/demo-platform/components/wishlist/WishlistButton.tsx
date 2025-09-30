@@ -1,8 +1,13 @@
 'use client'
 
+import {useEffect, useState} from 'react'
 import {useAtom} from 'jotai'
 import {Button} from '~/components/elements/Button'
 import {IconHeart, IconHeartFilled} from '~/components/elements/Icons'
+import {
+  addToWishlist,
+  deleteFromWishlist,
+} from '~/components/wishlist/functions/wishlistActions'
 import {wishlistItems} from '~/components/wishlist/store'
 import {tailwindMerge} from '~/helpers'
 
@@ -15,38 +20,58 @@ export function WishlistButton({
   buttonClasses?: string
   isDrawer?: boolean
 }) {
+  const [mounted, setMounted] = useState<boolean>()
   const [wishlistValues, setWishlistValues] = useAtom(wishlistItems)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return (
+      <Button
+        variant="light"
+        className={tailwindMerge(
+          'absolute right-0 top-0 z-[2] flex h-unit-8 w-unit-8 items-center justify-center rounded-none border-0 p-0 lg:h-unit-12 lg:w-unit-12 lg:py-0',
+          buttonClasses,
+        )}
+        aria-label="Add to Wishlist"
+      >
+        <IconHeart className="lg:w-[30px]" />
+      </Button>
+    )
+  }
 
   const handleClick = () => {
     let newWishlistValues = []
     const items = structuredClone(wishlistValues)
     let existing
 
-    items.forEach((item, index) => {
-      if (item === productId) {
-        // eslint-disable-next-line no-param-reassign
-        delete items[index]
-        existing = true
-      }
-    })
+    if (items.includes(productId)) {
+      existing = true
+      deleteFromWishlist(productId)
+    } else {
+      addToWishlist(productId)
+    }
 
     newWishlistValues =
       !existing && productId
         ? [...items, productId]
-        : items.filter(item => item !== null && typeof item !== undefined)
+        : items.filter(
+            item =>
+              item !== null && typeof item !== undefined && item !== productId,
+          )
 
     setWishlistValues(newWishlistValues)
   }
 
-  const isProductAddedToWishlist: boolean = wishlistValues.some(
-    n => n === productId,
-  )
+  const isProductAddedToWishlist: boolean = wishlistValues.includes(productId)
 
   return (
     <Button
       variant="light"
       className={tailwindMerge(
-        'absolute top-0 right-0 z-[2] flex h-unit-8 w-unit-8 items-center justify-center rounded-none border-0 p-0 lg:h-unit-12 lg:w-unit-12 lg:py-0',
+        'absolute right-0 top-0 z-[2] flex h-unit-8 w-unit-8 items-center justify-center rounded-none border-0 p-0 lg:h-unit-12 lg:w-unit-12 lg:py-0',
         buttonClasses,
         isDrawer ? 'lg:h-unit-8 lg:w-unit-8' : '',
       )}

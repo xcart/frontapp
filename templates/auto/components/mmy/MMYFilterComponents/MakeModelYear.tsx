@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react'
+import {MMYLevel} from '@xcart/storefront'
 import {useAtom, useAtomValue, useSetAtom} from 'jotai'
 import {useRouter, useSearchParams} from 'next/navigation'
 import {ButtonWithSpinner} from '~/components/elements/Button'
@@ -6,6 +7,7 @@ import {Checkbox} from '~/components/elements/Checkbox'
 import {getMMYPath} from '~/components/mmy/functions/getMMYPath'
 import {getUpdatedSearchParams} from '~/components/mmy/functions/getUpdatedSearchParams'
 import {prepareGarageItem} from '~/components/mmy/functions/helpers'
+import {MMYLevels, SelectedMMYLevel} from '~/components/mmy/functions/interface'
 import {LevelSelect} from '~/components/mmy/MMYFilterComponents/LevelSelect'
 import {
   drawerCurrentViewAtom,
@@ -23,7 +25,7 @@ export function MakeModelYear({
   levels,
 }: {
   isDrawer?: boolean
-  levels?: any
+  levels?: MMYLevels[]
 }) {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -101,17 +103,19 @@ export function MakeModelYear({
                 : 'flex w-full flex-col lg:w-[calc(100%_-_106px)] lg:flex-row'
             }
           >
-            {renderedLevels.map((level: any, index: number) => {
+            {renderedLevels.map((level: MMYLevels, index: number) => {
               const name = Object.keys(level)[0]
 
               const levelOptions = level[name].length
-                ? level[name]?.map((values: any) => {
+                ? level[name]?.map((values: MMYLevel) => {
                     return {...values, value: values.name}
                   })
                 : []
 
-              const handleLevelSelect = (selected: any) => {
-                setSelectedVehicleLevel((prev: any) => {
+              const handleLevelSelect = (
+                selected: React.ChangeEvent<HTMLSelectElement>,
+              ) => {
+                setSelectedVehicleLevel((prev: SelectedMMYLevel) => {
                   const selectedOption =
                     selected.target.options[selected.target.selectedIndex]
 

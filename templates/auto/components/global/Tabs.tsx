@@ -52,7 +52,7 @@ export function Tabs({
   return (
     <div className={tabsWrapperClasses}>
       {typeof sectionTitle !== undefined && (
-        <h2 className="text-center mb-unit-3 lg:mb-unit-4">{sectionTitle}</h2>
+        <h2 className="mb-unit-3 text-center lg:mb-unit-4">{sectionTitle}</h2>
       )}
       <Tab.Root
         orientation={orientation}
@@ -60,7 +60,7 @@ export function Tabs({
         defaultValue={defaultTab}
       >
         <Tab.List
-          className={sectionTitle ? 'text-center mb-unit-8' : 'mb-unit-6'}
+          className={sectionTitle ? 'mb-unit-8 text-center' : 'mb-unit-6'}
         >
           {tabs.map((tab, index) => {
             return (

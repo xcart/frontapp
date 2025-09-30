@@ -1,8 +1,8 @@
 import {getXCartClient} from 'app/client'
-import {CacheParams} from '~/constants'
-import {search} from './cloud-search/search'
 import {getStoredSelectedVehicle} from '~/components/mmy/functions/getStoredSelectedVehicle'
 import {GarageItem} from '~/components/mmy/functions/interface'
+import {CacheParams} from '~/constants'
+import {search} from './cloud-search/search'
 
 const getSelectedVehicleId = () => {
   const selectedVehicleValues: GarageItem = getStoredSelectedVehicle()
@@ -26,9 +26,15 @@ export const getSortedPaginatedProducts = async ({
   requestOptions?: CacheParams
 }) => {
   const page = Number(searchParams?.page ?? 1)
-  const levelId = getSelectedVehicleId()
 
-  const filterParams = levelId ? {...filter, 'filter.levelId': levelId} : filter
+  const getSelectedFilterLevelId = getSelectedVehicleId()
+    ? {'filter.levelId': getSelectedVehicleId()}
+    : undefined
+
+  const filterLevelId =
+    filter && filter['filter.levelId'] ? filter : getSelectedFilterLevelId
+
+  const filterParams = {...filter, ...filterLevelId}
 
   const {data, error} = await search({
     searchParams,
@@ -43,9 +49,9 @@ export const getSortedPaginatedProducts = async ({
   } else {
     const sorting = searchParams?.sort
       ? (() => {
-          const [orderBy, direction] = (searchParams.sort as string).split('-')
-          return {[`order_by.${orderBy}`]: direction}
-        })()
+        const [orderBy, direction] = (searchParams.sort as string).split('-')
+        return {[`order_by.${orderBy}`]: direction}
+      })()
       : {}
 
     const client = await getXCartClient()

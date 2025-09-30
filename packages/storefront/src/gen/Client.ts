@@ -89,6 +89,13 @@ import {
   getUserAddressItem,
   deleteUserAddressItem,
   patchUserAddressItem,
+  getWishlist,
+  getWishlistByHash,
+  clearWishlist,
+  mergeWishlist,
+  addToWishlist,
+  getWishlistProduct,
+  deleteFromWishlist,
 } from './openapi-types'
 
 export class Client {
@@ -587,6 +594,100 @@ export class Client {
         ...{...this.#requestOptions, ...request_options},
         endpoint: `/api/storefront/mmy/vin_lookup/${id}`,
         method: 'GET',
+      }),
+  }
+  public readonly wishlist = {
+    getWishlist: (
+      request_options?: Partial<RequestOptions>,
+    ): Promise<ApiResponse<getWishlist>> =>
+      rest<ApiResponse<getWishlist>>({
+        auth: this.#apiKey,
+        base_url: this.#baseUrl,
+        accessToken: this.#accessToken,
+        ...{...this.#requestOptions, ...request_options},
+        endpoint: `/api/storefront/wishlist`,
+        method: 'GET',
+      }),
+
+    getWishlistByHash: (
+      hash: string,
+      request_options?: Partial<RequestOptions>,
+    ): Promise<ApiResponse<getWishlistByHash>> =>
+      rest<ApiResponse<getWishlistByHash>>({
+        auth: this.#apiKey,
+        base_url: this.#baseUrl,
+        accessToken: this.#accessToken,
+        ...{...this.#requestOptions, ...request_options},
+        endpoint: `/api/storefront/wishlist/by_hash/${hash}`,
+        method: 'GET',
+      }),
+
+    clearWishlist: (
+      request_body: ApiBody<clearWishlist>,
+      request_options?: Partial<RequestOptions>,
+    ): Promise<ApiResponse<clearWishlist>> =>
+      rest<ApiResponse<clearWishlist>>({
+        auth: this.#apiKey,
+        base_url: this.#baseUrl,
+        accessToken: this.#accessToken,
+        ...{...this.#requestOptions, ...request_options},
+        endpoint: `/api/storefront/wishlist/clear`,
+        request_body,
+        method: 'POST',
+      }),
+
+    mergeWishlist: (
+      request_body: ApiBody<mergeWishlist>,
+      request_options?: Partial<RequestOptions>,
+    ): Promise<ApiResponse<mergeWishlist>> =>
+      rest<ApiResponse<mergeWishlist>>({
+        auth: this.#apiKey,
+        base_url: this.#baseUrl,
+        accessToken: this.#accessToken,
+        ...{...this.#requestOptions, ...request_options},
+        endpoint: `/api/storefront/wishlist/merge`,
+        request_body,
+        method: 'POST',
+      }),
+
+    addToWishlist: (
+      request_body: ApiBody<addToWishlist>,
+      request_options?: Partial<RequestOptions>,
+    ): Promise<ApiResponse<addToWishlist>> =>
+      rest<ApiResponse<addToWishlist>>({
+        auth: this.#apiKey,
+        base_url: this.#baseUrl,
+        accessToken: this.#accessToken,
+        ...{...this.#requestOptions, ...request_options},
+        endpoint: `/api/storefront/wishlist/product`,
+        request_body,
+        method: 'POST',
+      }),
+
+    getWishlistProduct: (
+      id: string,
+      request_options?: Partial<RequestOptions>,
+    ): Promise<ApiResponse<getWishlistProduct>> =>
+      rest<ApiResponse<getWishlistProduct>>({
+        auth: this.#apiKey,
+        base_url: this.#baseUrl,
+        accessToken: this.#accessToken,
+        ...{...this.#requestOptions, ...request_options},
+        endpoint: `/api/storefront/wishlist/product/${id}`,
+        method: 'GET',
+      }),
+
+    deleteFromWishlist: (
+      id: string,
+      request_options?: Partial<RequestOptions>,
+    ): Promise<ApiResponse<deleteFromWishlist>> =>
+      rest<ApiResponse<deleteFromWishlist>>({
+        auth: this.#apiKey,
+        base_url: this.#baseUrl,
+        accessToken: this.#accessToken,
+        ...{...this.#requestOptions, ...request_options},
+        endpoint: `/api/storefront/wishlist/product/${id}`,
+        method: 'DELETE',
       }),
   }
   public readonly other = {

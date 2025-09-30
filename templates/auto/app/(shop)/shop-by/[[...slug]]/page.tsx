@@ -21,6 +21,7 @@ export default async function Page({
   const {levelItems, lastPage} = await getShopByPaginatedLevelItems(
     depth,
     page,
+    32,
     parentId,
     firstLetter,
     substring,

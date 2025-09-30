@@ -75,12 +75,16 @@ module.exports = {
           500: 'var(--color-gray-500)',
           700: 'var(--color-gray-700)',
         },
+        'rgb-gray': {
+          300: 'rgb(var(--color-rgb-gray-300))',
+        },
         error: 'var(--color-error)',
         'error-alert': 'var(--color-error-alert)',
         warning: 'var(--color-warning)',
         success: 'var(--color-success)',
         'invariant-light': 'var(--color-invariant-light)',
         'invariant-dark': 'var(--color-invariant-dark)',
+        readonly: 'rgba(var(--color-rgb-gray-300), <alpha-value>)',
       },
       height: {
         header: BASE_UNIT * 12,

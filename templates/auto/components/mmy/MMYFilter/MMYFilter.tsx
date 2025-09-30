@@ -9,9 +9,9 @@ import {ButtonIcon} from '~/components/elements/Button'
 import {IconArrowDown, IconClose} from '~/components/elements/Icons'
 import {Alert} from '~/components/global/Alert'
 import {getUpdatedSearchParams} from '~/components/mmy/functions/getUpdatedSearchParams'
-import {GarageItem} from '~/components/mmy/functions/interface'
+import {GarageItem, MMYLevels} from '~/components/mmy/functions/interface'
 import {MakeModelYear} from '~/components/mmy/MMYFilterComponents/MakeModelYear'
-import {selectedVehicleAtom} from '~/components/mmy/store'
+import {levelsValuesAtom, selectedVehicleAtom} from '~/components/mmy/store'
 import {FindByVINFilter} from '~/components/mmy/VIN/FindByVINFilter'
 import {tailwindMerge} from '~/helpers'
 
@@ -19,7 +19,7 @@ export function MMYFilter({
   levels,
   selected,
 }: {
-  levels: any
+  levels: MMYLevels[]
   selected: GarageItem
 }) {
   const searchParams = useSearchParams()
@@ -36,7 +36,30 @@ export function MMYFilter({
 
   const ref = useRef<HTMLDivElement>(null)
 
-  useHydrateAtoms([[selectedVehicleAtom, selected]])
+  const compareVehiclesFromPath = () => {
+    if (
+      Object.keys(selected).length &&
+      pathname &&
+      pathname.indexOf('/mmy/') > -1
+    ) {
+      const name = pathname
+        .replace('/mmy/', '')
+        .split('/')
+        .join(' ')
+        .replaceAll('__', ' ')
+
+      if (selected.name !== name) {
+        return {}
+      }
+    }
+
+    return null
+  }
+
+  useHydrateAtoms([
+    [selectedVehicleAtom, compareVehiclesFromPath() || selected],
+    [levelsValuesAtom, levels],
+  ])
 
   useEffect(() => {
     setMounted(true)
@@ -149,19 +172,7 @@ export function MMYFilter({
           ref={ref}
           className="min-h-unit-16 bg-invariant-mmy-dark absolute left-0 top-0 w-full p-unit-4 py-unit-2 text-invariant-light lg:min-h-0 lg:px-unit-16 lg:py-unit-4"
         >
-          {alert && (
-            <Alert
-              message={alert}
-              closeButton={
-                <ButtonIcon
-                  onClick={() => setAlert(null)}
-                  className="absolute right-unit-4 top-unit-2 hover:bg-inherit"
-                >
-                  <IconClose className="fill-gray-700" />
-                </ButtonIcon>
-              }
-            />
-          )}
+          {alert && <Alert message={alert} closeButton />}
           <button
             className="lg:h-mmy-filter-lg absolute left-0 top-0 w-full"
             onClick={() => setOpen(!open)}

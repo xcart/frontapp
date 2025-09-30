@@ -22,6 +22,10 @@ export const COLORS: Record<string, LightDarkColor> = {
     light: '#F6F6F6',
     dark: '#323232',
   },
+  'rgb-gray-300': {
+    light: '246, 246, 246',
+    dark: '50, 50, 50',
+  },
   'gray-500': {
     light: '#DEDEDE',
     dark: '#6E6E6E',
