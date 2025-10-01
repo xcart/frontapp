@@ -44,6 +44,16 @@ export function getBaseSearchParams({
     })()
     : null
 
+  const filters = parseFilters(searchParams)
+  const searchConditions = {
+    ...(filter && filter['filter.brandId']
+      ? {brand: filter['filter.brandId']}
+      : {}),
+    ...(filter && filter['filter.levelId']
+      ? {mmy: filter['filter.levelId']}
+      : {}),
+  }
+
   const conditions = filter
     ? (() => {
       const result = {type: []}
@@ -67,16 +77,6 @@ export function getBaseSearchParams({
     : {}
 
   const page = searchParams?.page ? Number(searchParams.page) : 1
-  const filters = parseFilters(searchParams)
-  const searchConditions = {
-    ...conditions,
-    ...(filter && filter['filter.brandId']
-      ? {brand: filter['filter.brandId']}
-      : {}),
-    ...(filter && filter['filter.levelId']
-      ? {mmy: filter['filter.levelId']}
-      : {}),
-  }
 
   return {
     q: searchParams?.q ? (searchParams.q as string) : '',
@@ -90,6 +90,6 @@ export function getBaseSearchParams({
     },
     categoryId: categoryId ?? null,
     filters,
-    searchConditions,
+    conditions: {...conditions, ...searchConditions},
   }
 }
